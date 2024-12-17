@@ -1,0 +1,19 @@
+name: Notifications
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Send notification
+        run: |
+          echo "Sending notification..."
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Build finished successfully!"}' https://hooks.slack.com/services/your/webhook/url

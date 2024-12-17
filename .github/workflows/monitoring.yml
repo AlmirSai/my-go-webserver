@@ -1,0 +1,34 @@
+name: Monitoring
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  monitoring:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.23.3'
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.mod', '**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-mod-
+
+      - name: Run monitoring tasks
+        run: |
+          echo "Running monitoring tasks..."
+          curl -X POST -d "status=up" https://your-monitoring-service.com/api/metrics
+          go run ./monitoring/main.go

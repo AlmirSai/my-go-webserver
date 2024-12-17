@@ -1,0 +1,51 @@
+# Go binaries
+/bin/
+/obj/
+
+# Dependency directories
+/vendor/
+
+# Go test binary, built with `go test`
+*.test
+
+# Output of the go coverage tool, specifically when used with -coverprofile
+*.out
+
+# IDE directories
+.idea/
+.vscode/
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# MacOS
+.DS_Store
+
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Node.js
+node_modules/
+
+# VS Code
+.vscode/
+
+# GoLand
+.idea/
+
+# IntelliJ IDEA
+*.iml
+
+# JetBrains
+*.iws
+
+# Logs
+*.log
+
+# Temporary files
+*~

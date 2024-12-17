@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.23.3'
+
+      - name: Build Go application
+        run: go build -o webserver ./cmd/webserver/main.go
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_NAME="Release $GITHUB_REF"
+          RELEASE_BODY="Release notes for $GITHUB_REF"
+
+          curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+            -d @- https://api.github.com/repos/${{ github.repository }}/releases << EOF
+          {
+            "tag_name": "$GITHUB_REF",
+            "name": "$RELEASE_NAME",
+            "body": "$RELEASE_BODY",
+            "draft": false,
+            "prerelease": false
+          }
+          EOF
