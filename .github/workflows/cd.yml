@@ -17,16 +17,17 @@ jobs:
         with:
           go-version: '1.23.3'
 
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run tests
+        run: go test ./...
+
       - name: Build application
         run: |
           mkdir -p build
           go build -o build/webserver ./cmd/webserver/main.go
 
-      - name: Deploy to production
+      - name: Run application
         run: |
-          echo "Deploying to production server..."
-          scp -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no build/webserver user@your-production-server:/path/to/production/webserver
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no user@your-production-server '
-            pkill -f webserver || true
-            nohup /path/to/production/webserver > /dev/null 2>&1 &
-          '
+          ./build/webserver
