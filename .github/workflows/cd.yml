@@ -12,26 +12,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build Docker image
-        run: |
-          docker build -t my-webserver .
-
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2
+      - name: Set up Go
+        uses: actions/setup-go@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          go-version: '1.23.3'
 
-      - name: Push Docker image to DockerHub
+      - name: Build application
         run: |
-          docker tag my-webserver my-dockerhub-user/my-webserver:latest
-          docker push my-dockerhub-user/my-webserver:latest
+          mkdir -p build
+          go build -o build/webserver ./cmd/webserver/main.go
 
       - name: Deploy to production
         run: |
           echo "Deploying to production server..."
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} user@your-production-server 'docker pull my-dockerhub-user/my-webserver:latest && docker run -d --name webserver -p 80:80 my-dockerhub-user/my-webserver:latest'
-
+          scp -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no build/webserver user@your-production-server:/path/to/production/webserver
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no user@your-production-server '
+            pkill -f webserver || true
+            nohup /path/to/production/webserver > /dev/null 2>&1 &
+          '
