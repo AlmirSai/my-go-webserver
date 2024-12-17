@@ -35,4 +35,4 @@ jobs:
         run: go mod tidy
 
       - name: Build Go application
-        run: go build -o webserver ./cmd/webserver/main.go
+        run: go build -o build/webserver ./cmd/webserver/main.go
