@@ -26,9 +26,3 @@ jobs:
           key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.mod', '**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-mod-
-
-      - name: Run monitoring tasks
-        run: |
-          echo "Running monitoring tasks..."
-          curl -X POST -d "status=up" https://your-monitoring-service.com/api/metrics
-          go run ./monitoring/main.go
