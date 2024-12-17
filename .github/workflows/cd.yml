@@ -28,6 +28,12 @@ jobs:
           mkdir -p build
           go build -o build/webserver ./cmd/webserver/main.go
 
-      - name: Run application
+      - name: Run application (background)
         run: |
-          ./build/webserver
+          nohup ./build/webserver > server.log 2>&1 &
+          echo $! > server.pid
+          sleep 5
+
+      - name: Stop application
+        run: |
+          kill $(cat server.pid) || true
