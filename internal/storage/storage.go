@@ -1,6 +1,5 @@
 package storage
 
-// Storage интерфейс для работы с данными
 type Storage interface {
 	GetMessage() string
 }
