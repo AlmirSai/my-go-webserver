@@ -13,7 +13,7 @@ install-deps:
 .PHONY: build
 build:
 	@echo "Building Go application..."
-	go build -o webserver ./cmd/webserver/main.go
+	go build -o build/webserver ./cmd/webserver/main.go
 
 # Run tests
 .PHONY: test
@@ -60,4 +60,8 @@ docker-compose-down:
 .PHONY: clean
 clean:
 	@echo "Cleaning build artifacts..."
-	rm -f webserver
+	rm -f build/webserver
+
+# Run all steps
+.PHONY: all
+all: install-deps lint test build docker-build docker-run

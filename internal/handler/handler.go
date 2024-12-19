@@ -16,5 +16,5 @@ func NewHandler(s service.Service) *Handler {
 
 func (h *Handler) Home(w http.ResponseWriter, r *http.Request) {
 	message := h.service.GetWelcomeMessage()
-	fmt.Fprintf(w, message)
+	fmt.Fprintf(w, "%s", message)
 }
